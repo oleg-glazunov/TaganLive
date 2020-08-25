@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+    <!--<android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipe_news"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/adView">-->
+
+    <!--<ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:progressDrawable="@drawable/custom_progressbar"
+        android:visibility="visible" />-->
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateDrawable="@drawable/custom_progressbar2" />
+
+    <ListView
+        android:id="@+id/listView_news"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:divider="@android:color/transparent" />
+
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+
+    <LinearLayout
+        android:id="@+id/linearLayout_contentNews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/content_news" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_kino"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/kino" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_contentKino"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/content_kino" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_teatr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/teatr" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_contentTeatr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/content_teatr" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_rate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/rate" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_weather"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/weather" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <include layout="@layout/settings" />
+
+    </LinearLayout>
+
+    <!--android:layout_above="@+id/adView"-->
+    <!--android:layout_above="@+id/adView"-->
+    <!--<com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        tools:layout_height="50dp"></com.google.android.gms.ads.AdView>-->
+
+</RelativeLayout>

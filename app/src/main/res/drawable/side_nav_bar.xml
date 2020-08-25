@@ -1,0 +1,30 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+<!--    <gradient-->
+<!--        android:angle="135"-->
+<!--        android:centerColor="#007DC3"-->
+<!--        android:endColor="#303F9F"-->
+<!--        android:startColor="#007DC3"-->
+<!--        android:type="linear" />-->
+
+<!--    <gradient-->
+<!--        android:angle="0"-->
+<!--        android:startColor="#328fb1"-->
+<!--        android:endColor="#495190"-->
+<!--        android:type="linear" />-->
+
+<!--    <gradient-->
+<!--        android:angle="0"-->
+<!--        android:startColor="#e96e50"-->
+<!--        android:endColor="#ed8b72"-->
+<!--        android:type="linear" />-->
+
+
+    <gradient
+        android:angle="0"
+        android:startColor="@color/ColorPurple2"
+        android:endColor="@color/ColorPurple1"
+        android:type="linear" />
+
+</shape>

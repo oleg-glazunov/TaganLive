@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Таганрог Live</string>
+    <string name="title_activity_main">Таганрог Live</string>
+    <string name="title_menu">Новости, афиша, курсы валют, погода</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_return">Вернуться</string>
+    <string name="action_sync">Обновить</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_open_in_browser">Открыть в браузере</string>
+    <string name="action_share_link">Поделиться новостью</string>
+    <string name="action_share_app">Поделиться приложением</string>
+    <string name="action_comment">Оставить отзыв</string>
+    <string name="action_exit">Выход</string>
+
+    <string name="cinema_name">Кино НЕО</string>
+    <string name="cinema_phone">Бронь билетов, автоответчик с расписанием: 8 (8634) 32–47–47</string>
+
+    <string name="teatr_name">Таганрогский театр А.П.Чехова</string>
+    <string name="teatr_phone">Телефон кассы: 8 (8634) 383–493</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-5047866657221930/7229825605</string>
+
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="news">Новости</string>
+    <string name="kino">Киноафиша</string>
+    <string name="teatr">Театральная афиша</string>
+    <string name="weather">Погода</string>
+    <string name="rate">Курсы валют</string>
+    <string name="app">Приложения</string>
+    <string name="taxi">Вызов такси (скидка 10%)</string>
+    <string name="radio">Авторадио Таганрог</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+
+</resources>

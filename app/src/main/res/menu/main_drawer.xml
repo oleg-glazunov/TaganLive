@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/ic_comment_black_24dp"
+            android:title="@string/news"
+            android:checked="true" />
+        <item
+            android:id="@+id/nav_kino"
+            android:icon="@drawable/ic_local_movies_black_24dp"
+            android:title="@string/kino" />
+        <item
+            android:id="@+id/nav_teatr"
+            android:icon="@drawable/ic_account_balance_black_24dp"
+            android:title="@string/teatr" />
+        <item
+            android:id="@+id/nav_rate"
+            android:icon="@drawable/ic_monetization_on_black_24dp"
+            android:title="@string/rate" />
+        <item
+            android:id="@+id/nav_weather"
+            android:icon="@drawable/ic_beach_access_black_24dp"
+            android:title="@string/weather" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings" />
+        <item
+            android:id="@+id/nav_exit"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/exit" />
+    </group>
+
+<!--    <item android:title="@string/app">-->
+<!--        <menu>-->
+<!--            &lt;!&ndash;<item-->
+<!--                android:id="@+id/nav_call_taxi"-->
+<!--                android:icon="@drawable/ic_local_taxi_black_24dp"-->
+<!--                android:title="@string/taxi" />&ndash;&gt;-->
+<!--            <item-->
+<!--                android:id="@+id/nav_avtoradiotaganrog"-->
+<!--                android:icon="@drawable/ic_tap_and_play_black_24dp"-->
+<!--                android:title="@string/radio" />-->
+<!--        </menu>-->
+<!--    </item>-->
+
+</menu>

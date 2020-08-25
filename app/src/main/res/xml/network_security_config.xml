@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">bloknot.ru</domain>
+        <domain includeSubdomains="true">bloknot-taganrog.ru</domain>
+        <domain includeSubdomains="true">bloknot-rostov.ru</domain>
+        <domain includeSubdomains="true">bloknot-shakhty.ru</domain>
+        <domain includeSubdomains="true">bloknot-novocherkassk.ru</domain>
+        <domain includeSubdomains="true">bloknot-volgodonsk.ru</domain>
+    </domain-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
