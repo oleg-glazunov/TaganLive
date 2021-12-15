@@ -173,31 +173,53 @@ public class MainActivity extends AppCompatActivity
 
     // курсы валюты
     private LinearLayout linearLayout_rate;
+
+    private TextView textView_yesterday;
     private TextView textView_today;
-    private TextView textView_tomorrow;
+
+    private TextView textView_doll_yesterday;
+    private TextView textView_euro_yesterday;
+
     private TextView textView_doll_today;
-    private TextView textView_doll_tomorrow;
     private TextView textView_euro_today;
-    private TextView textView_euro_tomorrow;
+
+    private String yesterday;
     private String today;
-    private String tomorrow;
-    private String doll;
+
+    private String doll_symbol;
+    private String euro_symbol;
+
+    private String euro_yesterday;
+    private String doll_yesterday;
+
     private String doll_today;
-    private String doll_tomorrow;
-    private String euro;
     private String euro_today;
-    private String euro_tomorrow;
+
     // драг. металы
-    private TextView textView_metal_date;
-    private TextView textView_gold;
-    private TextView textView_silver;
-    private TextView textView_platinum;
-    private TextView textView_palladium;
-    private String metal_date;
-    private String gold;
-    private String silver;
-    private String platinum;
-    private String palladium;
+    private TextView textView_metal_today;
+    private TextView textView_metal_yesterday;
+
+    private TextView textView_gold_yesterday;
+    private TextView textView_silver_yesterday;
+    private TextView textView_platinum_yesterday;
+    private TextView textView_palladium_yesterday;
+
+    private TextView textView_gold_today;
+    private TextView textView_silver_today;
+    private TextView textView_platinum_today;
+    private TextView textView_palladium_today;
+
+    private String metal_yesterday;
+    private String gold_yesterday;
+    private String silver_yesterday;
+    private String platinum_yesterday;
+    private String palladium_yesterday;
+
+    private String metal_today;
+    private String gold_today;
+    private String silver_today;
+    private String platinum_today;
+    private String palladium_today;
 
     // текущая погода
     private LinearLayout linearLayout_weather;
@@ -387,18 +409,28 @@ public class MainActivity extends AppCompatActivity
 
         //курсы валюты
         linearLayout_rate = findViewById(R.id.linearLayout_rate);
+
+        textView_yesterday = findViewById(R.id.textView_yesterday);
+        textView_doll_yesterday = findViewById(R.id.textView_doll_yesterday);
+        textView_euro_yesterday = findViewById(R.id.textView_euro_yesterday);
+
         textView_today = findViewById(R.id.textView_today);
-        textView_tomorrow = findViewById(R.id.textView_tomorrow);
         textView_doll_today = findViewById(R.id.textView_doll_today);
-        textView_doll_tomorrow = findViewById(R.id.textView_doll_tomorrow);
         textView_euro_today = findViewById(R.id.textView_euro_today);
-        textView_euro_tomorrow = findViewById(R.id.textView_euro_tomorrow);
+
         //драг. металы
-        textView_metal_date = findViewById(R.id.textView_metal_date);
-        textView_gold = findViewById(R.id.textView_gold);
-        textView_silver = findViewById(R.id.textView_silver);
-        textView_platinum = findViewById(R.id.textView_platinum);
-        textView_palladium = findViewById(R.id.textView_palladium);
+        textView_metal_yesterday = findViewById(R.id.textView_metal_yesterday);
+        textView_metal_today = findViewById(R.id.textView_metal_today);
+
+        textView_gold_yesterday = findViewById(R.id.textView_gold_yesterday);
+        textView_silver_yesterday = findViewById(R.id.textView_silver_yesterday);
+        textView_platinum_yesterday = findViewById(R.id.textView_platinum_yesterday);
+        textView_palladium_yesterday = findViewById(R.id.textView_palladium_yesterday);
+
+        textView_gold_today = findViewById(R.id.textView_gold_today);
+        textView_silver_today = findViewById(R.id.textView_silver_today);
+        textView_platinum_today = findViewById(R.id.textView_platinum_today);
+        textView_palladium_today = findViewById(R.id.textView_palladium_today);
 
         // текущая погода
         linearLayout_weather = findViewById(R.id.linearLayout_weather);
@@ -507,7 +539,7 @@ public class MainActivity extends AppCompatActivity
 
 //                    mPicasso
 //                            //.load(content_url_img_news)
-//                            .load("https://drivetrener.ru/weather/logo_bloknot.jpg")
+//                            .load("https://datarush.ru/weather/logo_bloknot.jpg")
 //                            .into(imageView_content_img_news, new Callback() {
 //                                @Override
 //                                public void onSuccess() {
@@ -692,7 +724,7 @@ public class MainActivity extends AppCompatActivity
 
                 doc1 = Jsoup
                         .connect(url_news)
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                         .sslSocketFactory(socketFactory())
                         .timeout(5000)
                         .get();
@@ -716,7 +748,7 @@ public class MainActivity extends AppCompatActivity
                     String date_time_up_ = date_time_first_ + date_time_all_;
 
                     // url img topnews
-                    Element url_img_topnews = doc1.select(".preview_picture").select("img[src~=(?i)\\.(jpe?g)]").first();
+                    Element url_img_topnews = doc1.select(".preview_picture").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").first();
                     //System.out.println("https:" + url_img_topnews.attr("src"));
 
                     // url topnews
@@ -743,7 +775,7 @@ public class MainActivity extends AppCompatActivity
                         //Element img_top3news = element.select("style~=(?i)\\.(jpe?g)]").first();
                         String img_top3news = element.toString();
                         //Matcher matcher = Pattern.compile("s0(.*\\.(png|gif|jpe?g))").matcher(img_top3news); // old 02.02.17
-                        Matcher matcher = Pattern.compile("'/(.*\\.(png|gif|jpe?g))").matcher(img_top3news); // new 02.02.17
+                        Matcher matcher = Pattern.compile("'/(.*\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // new 02.02.17
                         String res = "";
                         while (matcher.find())
                             res = matcher.group(1);
@@ -768,7 +800,7 @@ public class MainActivity extends AppCompatActivity
                     // новости
                     for (int i = 1; i <= position_pages + 3; i++) {
                         doc2 = Jsoup.connect(url_news + i)
-                                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                                 //.ignoreContentType(true)
                                 .sslSocketFactory(socketFactory())
                                 .timeout(5000)
@@ -782,7 +814,7 @@ public class MainActivity extends AppCompatActivity
                         for (Element element : elements) {
 
                             // заглавное фото новости
-                            Element img = doc2.select(".preview_picture").select("img[src~=(?i)\\.(png|gif|jpe?g)]").get(m++);
+                            Element img = doc2.select(".preview_picture").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").get(m++);
                             //System.out.println("https:" + img.attr("src"));
 
                             // дата новости
@@ -835,7 +867,7 @@ public class MainActivity extends AppCompatActivity
                     // url img topnews
                     Element url_img_topnews = doc1.select(".top-news .image_top-image").first();
                     String img_topnews = url_img_topnews.toString();
-                    Matcher matcher = Pattern.compile("http:\\/\\/[^\\s]*(png|gif|jpe?g)").matcher(img_topnews);
+                    Matcher matcher = Pattern.compile("http:\\/\\/[^\\s]*(png|gif|jpe?g|webp)").matcher(img_topnews);
                     String res = "";
                     while (matcher.find())
                         res = matcher.group(0);
@@ -883,7 +915,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 doc = Jsoup
                         .connect(params[0])
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                         .sslSocketFactory(socketFactory())
                         .timeout(5000)
                         .get();
@@ -891,7 +923,7 @@ public class MainActivity extends AppCompatActivity
                 Element date_time1 = doc.select(".news-date-time").get(0);
                 Element date_time2 = doc.select(".news-date-time").get(1);
 
-                Element img = doc.select(".news-picture").select("img[src~=(?i)\\.(png|gif|jpe?g)]").get(0); //21.08.16
+                Element img = doc.select(".news-picture").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").get(0); //21.08.16
                 //System.out.println(img.attr("src"));
                 content_url_img_news = http + img.attr("src");
                 //System.out.println(content_url_img_news);
@@ -900,7 +932,7 @@ public class MainActivity extends AppCompatActivity
                 Element content = doc.select(".news-text").first();
 
                 //картинки из статьи
-                Elements content_imgs = content.select("img[src~=(?i)\\.(png|gif|jpe?g)]");
+                Elements content_imgs = content.select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]");
                 for (Element content_img : content_imgs) {
                     //System.out.println("https:" + content_img.attr("src"));
                 }
@@ -955,7 +987,7 @@ public class MainActivity extends AppCompatActivity
             // do Picasso
             //Picasso.with(v.getContext()).load(url).into(img);
             Picasso.get().load(url).into(img);
-            //Picasso.get().load("https://drivetrener.ru/weather/logo_bloknot.jpg").into(img);
+            //Picasso.get().load("https://datarush.ru/weather/logo_bloknot.jpg").into(img);
 
             // return the view
             return v;
@@ -986,7 +1018,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 doc = Jsoup
                         .connect("https://kinoneo.ru/schedule")
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                         .ignoreContentType(true)
                         .timeout(5000)
                         .get();
@@ -1084,7 +1116,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 doc = Jsoup
                         .connect(params[0])
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                         .timeout(5000)
                         .get();
 
@@ -1194,7 +1226,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 doc = Jsoup
                         .connect("http://chehovsky.ru/afisha/afisha")
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                         .ignoreContentType(true)
                         .timeout(5000)
                         .get();
@@ -1223,7 +1255,7 @@ public class MainActivity extends AppCompatActivity
 //                        } else {
 //                            map.put(ATTRIBUTE_URL_IMG_TEATR, null);
 //                        }
-                        Element img = element.select(".performance").select("img[src~=(?i)\\.(png|gif|jpe?g)]").first();
+                        Element img = element.select(".performance").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").first();
                         if (img == null) {
                             map.put(ATTRIBUTE_URL_IMG_TEATR, "android.resource://" + getPackageName() + "/drawable/teatr_noimage");
                         } else {
@@ -1280,7 +1312,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 doc = Jsoup
                         .connect(params[0])
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                         .ignoreContentType(true)
                         .timeout(5000)
                         .get();
@@ -1355,29 +1387,36 @@ public class MainActivity extends AppCompatActivity
             String inflation = "";
             try {
                 Document doc = Jsoup
-                        .connect("https://www.cbr.ru/key-indicators")
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36")
+                        .connect("https://cbr.ru/key-indicators/")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
                         .timeout(5000)
                         .get();
 
                 // валюта
-                Element rate_content = doc.select(".key-indicator_table_wrapper").get(0);
-                today = rate_content.select(".td-w-4").get(0).text();
-                tomorrow = rate_content.select(".td-w-4").get(1).text();
-                doll = "$";
-                doll_today = rate_content.select(".td-w-4").get(2).text();
-                doll_tomorrow = rate_content.select(".td-w-4").get(3).text();
-                euro = "€";
-                euro_today =  rate_content.select(".td-w-4").get(4).text();
-                euro_tomorrow = rate_content.select(".td-w-4").get(5).text();
+                Element rate_content = doc.select(".key-indicator_table_wrapper").get(1);
+                yesterday = rate_content.select(".td-w-4").get(0).text();
+                today = rate_content.select(".td-w-4").get(1).text();
+                doll_symbol = "$";
+                doll_yesterday = rate_content.select(".td-w-4").get(2).text();
+                doll_today = rate_content.select(".td-w-4").get(3).text();
+                euro_symbol = "€";
+                euro_yesterday =  rate_content.select(".td-w-4").get(4).text();
+                euro_today = rate_content.select(".td-w-4").get(5).text();
 
                 // драг.металы
-                Element metal_content = doc.select(".key-indicator_table_wrapper").get(1);
-                metal_date = metal_content.select(".td-w-4").get(0).text();
-                gold = "Золото Au   " + metal_content.select(".td-w-4").get(1).text();
-                silver = "Серебро Ag   " + metal_content.select(".td-w-4").get(2).text();
-                platinum = "Платина Pt   " + metal_content.select(".td-w-4").get(3).text();
-                palladium = "Палладий Pd   " + metal_content.select(".td-w-4").get(4).text();
+                Element metal_content = doc.select(".key-indicator_table_wrapper").get(2);
+                metal_yesterday = metal_content.select(".td-w-4").get(0).text();
+                metal_today = metal_content.select(".td-w-4").get(1).text();
+
+                gold_yesterday = "Золото Au   " + metal_content.select(".td-w-4").get(2).text();
+                silver_yesterday = "Серебро Ag   " + metal_content.select(".td-w-4").get(4).text();
+                platinum_yesterday = "Платина Pt   " + metal_content.select(".td-w-4").get(6).text();
+                palladium_yesterday = "Палладий Pd   " + metal_content.select(".td-w-4").get(8).text();
+
+                gold_today = "Золото Au   " + metal_content.select(".td-w-4").get(3).text();
+                silver_today = "Серебро Ag   " + metal_content.select(".td-w-4").get(5).text();
+                platinum_today = "Платина Pt   " + metal_content.select(".td-w-4").get(7).text();
+                palladium_today = "Палладий Pd   " + metal_content.select(".td-w-4").get(9).text();
 
             } catch (IOException e) {
                 Log.d(LOG_TAG, "Ошибка парсинга Rate", e);
@@ -1407,7 +1446,7 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 //String url = "https://api.openweathermap.org/data/2.5/weather?id=484907&mode=xml&units=metric&appid=4e18471d0de9bf62801d17fb78f2f75d&lang=ru";
-                String url_weather = "https://drivetrener.ru/weather/weather.xml";
+                String url_weather = "https://datarush.ru/weather/weather.xml";
                 Document doc = Jsoup.parse(new URL(url_weather).openStream(), "UTF-8", "", Parser.xmlParser());
 
                 //текущая погода
@@ -1574,7 +1613,7 @@ public class MainActivity extends AppCompatActivity
 
                 // прогноз погоды на 5 дней
                 //String url2 = "https://api.openweathermap.org/data/2.5/forecast?id=484907&mode=xml&units=metric&appid=4e18471d0de9bf62801d17fb78f2f75d&lang=ru";
-                String url_forecast = "https://drivetrener.ru/weather/forecast.xml";
+                String url_forecast = "https://datarush.ru/weather/forecast.xml";
                 Document doc2 = Jsoup.parse(new URL(url_forecast).openStream(), "UTF-8", "", Parser.xmlParser());
                 Elements forecasts = doc2.select("time");
                 for (Element forecast : forecasts) {
@@ -1808,7 +1847,12 @@ public class MainActivity extends AppCompatActivity
                 Toolbar mToolbar = findViewById(R.id.toolbar);
                 mToolbar.post(new Runnable() {
                     public void run() {
-                        getSupportActionBar().setSubtitle(doll + " " + doll_today.substring(0, 4) + " " + euro + " " + euro_today.substring(0, 4) + " | t " + tm);
+                        try {
+                            getSupportActionBar().setSubtitle(doll_symbol + " " + doll_today.substring(0, 4) + " " + euro_symbol + " " + euro_today.substring(0, 4) + " | t " + tm);
+                        } catch (NullPointerException e) {
+                            getSupportActionBar().setSubtitle("");
+                            Log.d(LOG_TAG, "Ошибка парсинга Rate", e);
+                        }
                     }
                 });
 
@@ -2346,19 +2390,26 @@ public class MainActivity extends AppCompatActivity
             parseRate.execute();
 
             //курсы валют
+            textView_yesterday.setText(yesterday);
             textView_today.setText(today);
-            textView_tomorrow.setText(tomorrow);
-            textView_doll_today.setText(doll + " " + doll_today);
-            textView_doll_tomorrow.setText(doll + " " + doll_tomorrow);
-            textView_euro_today.setText(euro + " " + euro_today);
-            textView_euro_tomorrow.setText(euro + " " + euro_tomorrow);
+            textView_doll_yesterday.setText(doll_symbol + " " + doll_yesterday);
+            textView_doll_today.setText(doll_symbol + " " + doll_today);
+            textView_euro_yesterday.setText(euro_symbol + " " + euro_yesterday);
+            textView_euro_today.setText(euro_symbol + " " + euro_today);
 
             //драг. металы
-            textView_metal_date.setText(metal_date);
-            textView_gold.setText(gold);
-            textView_silver.setText(silver);
-            textView_platinum.setText(platinum);
-            textView_palladium.setText(palladium);
+            textView_metal_yesterday.setText(metal_yesterday);
+            textView_metal_today.setText(metal_today);
+
+            textView_gold_yesterday.setText(gold_yesterday);
+            textView_silver_yesterday.setText(silver_yesterday);
+            textView_platinum_yesterday.setText(platinum_yesterday);
+            textView_palladium_yesterday.setText(palladium_yesterday);
+
+            textView_gold_today.setText(gold_today);
+            textView_silver_today.setText(silver_today);
+            textView_platinum_today.setText(platinum_today);
+            textView_palladium_today.setText(palladium_today);
 
         } else if (id == R.id.nav_weather) {
 
