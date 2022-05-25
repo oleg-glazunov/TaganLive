@@ -768,9 +768,9 @@ public class MainActivity extends AppCompatActivity
                         // url img top3news
                         //Element img_top3news = element.select("style~=(?i)\\.(jpe?g)]").first();
                         String img_top3news = element.toString();
-                        //Matcher matcher = Pattern.compile("s0(.*\\.(png|gif|jpe?g))").matcher(img_top3news); // old 02.02.17
-                        //Matcher matcher = Pattern.compile("'/(.*\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // new 02.02.17
-                        Matcher matcher = Pattern.compile("'/(.*(?i)\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // new 25.05.22
+                        // Matcher matcher = Pattern.compile("s0(.*\\.(png|gif|jpe?g))").matcher(img_top3news); // < 02.02.17
+                        // Matcher matcher = Pattern.compile("'/(.*\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // 02.02.17
+                        Matcher matcher = Pattern.compile("'/(.*(?i)\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // 25.05.22
                         String res = "";
                         while (matcher.find())
                             res = matcher.group(1);
