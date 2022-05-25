@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
     public String url_content_news;
     public ImageView imageView_content_img_news;
     public String content_url_img_news;
-    public String http;
+    //public String http;
     public TextView textView_content_time_news;
     public String content_time_news;
     public TextView textView_content_news;
@@ -685,35 +685,29 @@ public class MainActivity extends AppCompatActivity
             String url_news = "";
             String url_news_tag = "https://bloknot-taganrog.ru/?PAGEN_1=";
             String url_news_ros = "https://bloknot-rostov.ru/?PAGEN_1=";
-            String url_news_sha = "http://bloknot-shakhty.ru/?PAGEN_1=";
-            String url_news_nov = "http://bloknot-novocherkassk.ru/?PAGEN_1=";
+            String url_news_sha = "https://bloknot-shakhty.ru/?PAGEN_1=";
+            String url_news_nov = "https://bloknot-novocherkassk.ru/?PAGEN_1=";
             String url_news_vol = "https://bloknot-volgodonsk.ru/?PAGEN_1=";
-            String url_news_ros_obl = "http://bloknot.ru/tag/rostovskaya-oblast";
+            String url_news_ros_obl = "https://bloknot.ru/tag/rostovskaya-oblast";
 
             switch (position_cities) {
                 case 0:
                     url_news = url_news_tag;
-                    http = "https:";
                     break;
                 case 1:
                     url_news = url_news_ros;
-                    http = "https:";
                     break;
                 case 2:
                     url_news = url_news_sha;
-                    http = "http:";
                     break;
                 case 3:
                     url_news = url_news_nov;
-                    http = "http:";
                     break;
                 case 4:
                     url_news = url_news_vol;
-                    http = "https:";
                     break;
                 case 5:
                     url_news = url_news_ros_obl;
-                    http = "http:";
                     break;
             }
 
@@ -759,7 +753,7 @@ public class MainActivity extends AppCompatActivity
                     map1.put(ATTRIBUTE_TIME_NEWS, "Топ новость. " + cat_top_news.text() + ". " + date_time_up_);
                     map1.put(ATTRIBUTE_HEADER_NEWS, top_news.text());
                     //map1.put(ATTRIBUTE_SUBTITLE_NEWS, subtitle_top_news.text());
-                    map1.put(ATTRIBUTE_URL_IMG_NEWS, http + url_img_topnews.attr("src"));
+                    map1.put(ATTRIBUTE_URL_IMG_NEWS, "https:" + url_img_topnews.attr("src"));
                     map1.put(ATTRIBUTE_HREF_NEWS, href.attr("abs:href"));
 
                     // adding HashList to ArrayList
@@ -768,14 +762,15 @@ public class MainActivity extends AppCompatActivity
                     //System.out.println(top_news.text());
 
                     // top3news
-                    Elements top3news = doc1.select(".no_active");
+                    Elements top3news = doc1.select(".nav .no_active");
                     for (Element element : top3news) {
 
                         // url img top3news
                         //Element img_top3news = element.select("style~=(?i)\\.(jpe?g)]").first();
                         String img_top3news = element.toString();
                         //Matcher matcher = Pattern.compile("s0(.*\\.(png|gif|jpe?g))").matcher(img_top3news); // old 02.02.17
-                        Matcher matcher = Pattern.compile("'/(.*\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // new 02.02.17
+                        //Matcher matcher = Pattern.compile("'/(.*\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // new 02.02.17
+                        Matcher matcher = Pattern.compile("'/(.*(?i)\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // new 25.05.22
                         String res = "";
                         while (matcher.find())
                             res = matcher.group(1);
@@ -788,7 +783,7 @@ public class MainActivity extends AppCompatActivity
                         //map2.put("Топ новость. " + element.select("p").text(), href.attr("abs:href"));
                         map2.put(ATTRIBUTE_TIME_NEWS, "Топ новость");
                         map2.put(ATTRIBUTE_HEADER_NEWS, element.select("p").text());
-                        map2.put(ATTRIBUTE_URL_IMG_NEWS, http + "//" + res.substring(1));
+                        map2.put(ATTRIBUTE_URL_IMG_NEWS, "https://" + (res != null ? res.substring(1) : ""));
                         map2.put(ATTRIBUTE_HREF_NEWS, href2.attr("abs:href"));
 
                         // adding HashList to ArrayList
@@ -823,7 +818,7 @@ public class MainActivity extends AppCompatActivity
                             String date_time_first = date_time.text().substring(0, 1).toLowerCase();
                             String date_time_all = date_time.text().substring(1);
                             String date_time_up = date_time_first + date_time_all;
-                            date_time_up = date_time_up.substring(0, date_time_up.length() - 2); // убираем лищние символы в конце строки
+                            //date_time_up = date_time_up.substring(0, date_time_up.length() - 2); // убираем лищние символы в конце строки
 
                             // подзаголовок
                             //Element subtitle_news = doc2.select(".bigline").select("p").get(s++);
@@ -842,7 +837,7 @@ public class MainActivity extends AppCompatActivity
                             map3.put(ATTRIBUTE_TIME_NEWS, cat_news.text() + ", " + date_time_up); //07.09.17
                             map3.put(ATTRIBUTE_HEADER_NEWS, element.text());
                             //map3.put(ATTRIBUTE_SUBTITLE_NEWS, subtitle_news.text());
-                            map3.put(ATTRIBUTE_URL_IMG_NEWS, http + img.attr("src"));
+                            map3.put(ATTRIBUTE_URL_IMG_NEWS, "https:" + img.attr("src"));
                             map3.put(ATTRIBUTE_HREF_NEWS, href3.attr("abs:href"));
 
                             // adding HashList to ArrayList
@@ -867,7 +862,7 @@ public class MainActivity extends AppCompatActivity
                     // url img topnews
                     Element url_img_topnews = doc1.select(".top-news .image_top-image").first();
                     String img_topnews = url_img_topnews.toString();
-                    Matcher matcher = Pattern.compile("http:\\/\\/[^\\s]*(png|gif|jpe?g|webp)").matcher(img_topnews);
+                    Matcher matcher = Pattern.compile("https:\\/\\/[^\\s]*(png|gif|jpe?g|webp)").matcher(img_topnews);
                     String res = "";
                     while (matcher.find())
                         res = matcher.group(0);
@@ -925,7 +920,7 @@ public class MainActivity extends AppCompatActivity
 
                 Element img = doc.select(".news-picture").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").get(0); //21.08.16
                 //System.out.println(img.attr("src"));
-                content_url_img_news = http + img.attr("src");
+                content_url_img_news = "https:" + img.attr("src");
                 //System.out.println(content_url_img_news);
 
                 //текст статьи
