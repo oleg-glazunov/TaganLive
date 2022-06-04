@@ -46,6 +46,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -62,6 +63,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity
 
     // имена атрибутов для Map (Новости)
     final String ATTRIBUTE_TIME_NEWS = "time_news";
-    final String ATTRIBUTE_HEADER_NEWS = "header_news";
+    final String ATTRIBUTE_TITLE_NEWS = "title_news";
     final String ATTRIBUTE_SUBTITLE_NEWS = "subtitle_news";
     final String ATTRIBUTE_URL_IMG_NEWS = "url_img_news";
     final String ATTRIBUTE_HREF_NEWS = "href_news";
@@ -267,9 +269,8 @@ public class MainActivity extends AppCompatActivity
 
     // settings
     private LinearLayout linearLayout_settings;
-    //String[] cities = {"Таганрог", "Ростов-на-Дону", "Шахты", "Новочеркасск", "Волгодонск", "Ростовская область"};
     String[] cities = {"Таганрог", "Ростов-на-Дону", "Шахты", "Новочеркасск", "Волгодонск"};
-    String[] pages = {"3", "4", "5", "6", "7" , "8", "9", "10"};
+    String[] pages = {"3", "4", "5", "6", "7", "8", "9", "10"};
     public int position_cities;
     public int position_pages;
 
@@ -344,6 +345,7 @@ public class MainActivity extends AppCompatActivity
                 position_cities = position1;
                 //Toast.makeText(getBaseContext(), "Cities pos = " + position_cities, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
@@ -355,6 +357,7 @@ public class MainActivity extends AppCompatActivity
                 position_pages = position;
                 //Toast.makeText(getBaseContext(), "Pages pos = " + position_pages, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
@@ -374,7 +377,7 @@ public class MainActivity extends AppCompatActivity
                                     MainActivity.this,
                                     arrayList_news,
                                     R.layout.list_news2,
-                                    new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_HEADER_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
+                                    new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_TITLE_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
                                     new int[]{R.id.time_news, R.id.header_news, R.id.subtitle_news});
                     // определяем список и присваиваем ему адаптер
                     listView_news = findViewById(R.id.listView_news);
@@ -481,7 +484,7 @@ public class MainActivity extends AppCompatActivity
                             MainActivity.this,
                             arrayList_news,
                             R.layout.list_news2,
-                            new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_HEADER_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
+                            new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_TITLE_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
                             new int[]{R.id.time_news, R.id.header_news, R.id.subtitle_news});
 
             // определяем список и присваиваем ему адаптер
@@ -532,6 +535,7 @@ public class MainActivity extends AppCompatActivity
                                 @Override
                                 public void onSuccess() {
                                 }
+
                                 @Override
                                 public void onError(Exception e) {
                                 }
@@ -597,7 +601,7 @@ public class MainActivity extends AppCompatActivity
                                             MainActivity.this,
                                             arrayList_news,
                                             R.layout.list_news2,
-                                            new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_HEADER_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
+                                            new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_TITLE_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
                                             new int[]{R.id.time_news, R.id.header_news, R.id.subtitle_news});
 
                             // определяем список и присваиваем ему адаптер
@@ -679,16 +683,12 @@ public class MainActivity extends AppCompatActivity
 
             ArrayList<HashMap<String, String>> arrayListNews = new ArrayList<>();
 
-            Document doc1 = null;
-            Document doc2 = null;
-
             String url_news = "";
-            String url_news_tag = "https://bloknot-taganrog.ru/?PAGEN_1=";
-            String url_news_ros = "https://bloknot-rostov.ru/?PAGEN_1=";
-            String url_news_sha = "https://bloknot-shakhty.ru/?PAGEN_1=";
-            String url_news_nov = "https://bloknot-novocherkassk.ru/?PAGEN_1=";
-            String url_news_vol = "https://bloknot-volgodonsk.ru/?PAGEN_1=";
-            String url_news_ros_obl = "https://bloknot.ru/tag/rostovskaya-oblast";
+            String url_news_tag = "https://donday-taganrog.ru";
+            String url_news_ros = "https://donday.ru";
+            String url_news_sha = "https://donday-shakhty.ru";
+            String url_news_nov = "https://donday-novocherkassk.ru";
+            String url_news_vol = "https://donday-volgodonsk.ru";
 
             switch (position_cities) {
                 case 0:
@@ -706,184 +706,55 @@ public class MainActivity extends AppCompatActivity
                 case 4:
                     url_news = url_news_vol;
                     break;
-                case 5:
-                    url_news = url_news_ros_obl;
-                    break;
             }
 
-            //for (; count <= params[0]; count++) {
             try {
-                //Thread.sleep(1000);
-                //publishProgress(count);
+                for (int i = 1; i <= position_pages + 3; i++) {
 
-                doc1 = Jsoup
-                        .connect(url_news)
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
-                        .sslSocketFactory(socketFactory())
-                        .timeout(5000)
-                        .get();
+                    Document doc = Jsoup.connect(url_news + "/page/" + i)
+                            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+                            .sslSocketFactory(socketFactory())
+                            .referrer("https://www.google.com/")
+                            .timeout(5000)
+                            .get();
 
-                if (!url_news.equals(url_news_ros_obl)) {
+                    Elements elements = doc.select(".shortstory");
 
-                    // topnews
-                    // header topnews
-                    Element top_news = doc1.select(".about .h1").first();
+                    for (Element element : elements) {
 
-                    // subtitle topnews
-                    //Element subtitle_top_news = doc1.select(".about").select("p").first();
+                        // заголовок
+                        Element title = element.select(".btl").first();
 
-                    // категория
-                    Element cat_top_news = doc1.select(".minfo .cat").first();
+                        // дата
+                        Element date_time = element.select(".argbox").first();
 
-                    // date_time
-                    Element date_time_ = doc1.select(".minfo i").get(1);
-                    String date_time_first_ = date_time_.text().substring(0, 1).toUpperCase();
-                    String date_time_all_ = date_time_.text().substring(1);
-                    String date_time_up_ = date_time_first_ + date_time_all_;
+                        // категория
+                        Element cat = element.select(".argcat").first();
 
-                    // url img topnews
-                    Element url_img_topnews = doc1.select(".preview_picture").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").first();
-                    //System.out.println("https:" + url_img_topnews.attr("src"));
+                        // начало статьи
+                        Element article = element.select("a").select("span").get(0);
 
-                    // url topnews
-                    Element href = top_news.select("a[href]").first();
+                        // фото
+                        Element img = element.select("picture").select("source[srcset~=(?i)\\.(png|gif|jpe?g|webp)]").first();
 
-                    HashMap<String, String> map1 = new HashMap<>();
-                    //map1.put("Топ новость. " + date_time_up_ + ". " + top_news.text(), href_.attr("abs:href"));
-                    map1.put(ATTRIBUTE_TIME_NEWS, "Топ новость. " + cat_top_news.text() + ". " + date_time_up_);
-                    map1.put(ATTRIBUTE_HEADER_NEWS, top_news.text());
-                    //map1.put(ATTRIBUTE_SUBTITLE_NEWS, subtitle_top_news.text());
-                    map1.put(ATTRIBUTE_URL_IMG_NEWS, "https:" + url_img_topnews.attr("src"));
-                    map1.put(ATTRIBUTE_HREF_NEWS, href.attr("abs:href"));
+                        // ссылка
+                        Element href = element.select("a[href]").first();
 
-                    // adding HashList to ArrayList
-                    arrayListNews.add(map1);
-
-                    //System.out.println(top_news.text());
-
-                    // top3news
-                    Elements top3news = doc1.select(".nav .no_active");
-                    for (Element element : top3news) {
-
-                        // url img top3news
-                        //Element img_top3news = element.select("style~=(?i)\\.(jpe?g)]").first();
-                        String img_top3news = element.toString();
-                        // Matcher matcher = Pattern.compile("s0(.*\\.(png|gif|jpe?g))").matcher(img_top3news); // < 02.02.17
-                        // Matcher matcher = Pattern.compile("'/(.*\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // 02.02.17
-                        Matcher matcher = Pattern.compile("'/(.*(?i)\\.(png|gif|jpe?g|webp))").matcher(img_top3news); // 25.05.22
-                        String res = "";
-                        while (matcher.find())
-                            res = matcher.group(1);
-                        //System.out.println("https://" + res.substring(1));
-
-                        // url top3news
-                        Element href2 = element.select("a[href]").first();
-
-                        HashMap<String, String> map2 = new HashMap<>();
-                        //map2.put("Топ новость. " + element.select("p").text(), href.attr("abs:href"));
-                        map2.put(ATTRIBUTE_TIME_NEWS, "Топ новость");
-                        map2.put(ATTRIBUTE_HEADER_NEWS, element.select("p").text());
-                        map2.put(ATTRIBUTE_URL_IMG_NEWS, "https://" + (res != null ? res.substring(1) : ""));
-                        map2.put(ATTRIBUTE_HREF_NEWS, href2.attr("abs:href"));
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(ATTRIBUTE_TIME_NEWS, cat.text() + ", " + date_time.text());
+                        map.put(ATTRIBUTE_TITLE_NEWS, title.text());
+                        map.put(ATTRIBUTE_SUBTITLE_NEWS, article.text());
+                        map.put(ATTRIBUTE_URL_IMG_NEWS, url_news + img.attr("srcset"));
+                        map.put(ATTRIBUTE_HREF_NEWS, href.attr("abs:href"));
 
                         // adding HashList to ArrayList
-                        arrayListNews.add(map2);
-
-                        //System.out.println(element.select("p").text());
+                        arrayListNews.add(map);
                     }
-
-                    // новости
-                    for (int i = 1; i <= position_pages + 3; i++) {
-                        doc2 = Jsoup.connect(url_news + i)
-                                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
-                                //.ignoreContentType(true)
-                                .sslSocketFactory(socketFactory())
-                                .timeout(5000)
-                                .get();
-
-                        Elements elements = doc2.select(".bigline .sys");
-                        int d = 0;
-                        int m = 1;
-                        int s = 0;
-                        int c = 0;
-                        for (Element element : elements) {
-
-                            // заглавное фото новости
-                            Element img = doc2.select(".preview_picture").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").get(m++);
-                            //System.out.println("https:" + img.attr("src"));
-
-                            // дата новости
-                            Element date_time = doc2.select(".bigline .botinfo").get(d++);
-                            // дата с заглавной буквы
-                            String date_time_first = date_time.text().substring(0, 1).toLowerCase();
-                            String date_time_all = date_time.text().substring(1);
-                            String date_time_up = date_time_first + date_time_all;
-                            //date_time_up = date_time_up.substring(0, date_time_up.length() - 2); // убираем лищние символы в конце строки
-
-                            // подзаголовок
-                            //Element subtitle_news = doc2.select(".bigline").select("p").get(s++);
-
-                            // категория
-                            Element cat_news = doc2.select(".bigline .cat").get(c++); //07.09.17
-
-                            // ссылка на новость
-                            Element href3 = element.select("a[href]").first();
-
-                            //System.out.println(date_time_up + ". " + element.text());
-                            //System.out.println(url_img_news);
-
-                            //hashMap.put(date_time_up + ". " + element.text(), href.attr("abs:href"));
-                            HashMap<String, String> map3 = new HashMap<>();
-                            map3.put(ATTRIBUTE_TIME_NEWS, cat_news.text() + ", " + date_time_up); //07.09.17
-                            map3.put(ATTRIBUTE_HEADER_NEWS, element.text());
-                            //map3.put(ATTRIBUTE_SUBTITLE_NEWS, subtitle_news.text());
-                            map3.put(ATTRIBUTE_URL_IMG_NEWS, "https:" + img.attr("src"));
-                            map3.put(ATTRIBUTE_HREF_NEWS, href3.attr("abs:href"));
-
-                            // adding HashList to ArrayList
-                            arrayListNews.add(map3);
-
-                        }
-                    }
-                } else { // ростовкая область
-
-                    // header topnews
-                    Element top_news = doc1.select(".top-news .top-news__head").first();
-
-                    // subtitle topnews
-                    //Element subtitle_top_news = doc1.select(".top-news .top-news__text").first();
-
-                    // категория
-                    Element cat_top_news = doc1.select(".top-news .link_tag").first();
-
-                    // url topnews
-                    Element href = doc1.select(".top-news .top-news__description").select("a[href]").first();
-
-                    // url img topnews
-                    Element url_img_topnews = doc1.select(".top-news .image_top-image").first();
-                    String img_topnews = url_img_topnews.toString();
-                    Matcher matcher = Pattern.compile("https:\\/\\/[^\\s]*(png|gif|jpe?g|webp)").matcher(img_topnews);
-                    String res = "";
-                    while (matcher.find())
-                        res = matcher.group(0);
-                    //System.out.println(res.substring(1));
-
-                    HashMap<String, String> map1 = new HashMap<>();
-                    map1.put(ATTRIBUTE_TIME_NEWS, "Топ новость. " + cat_top_news.text());
-                    map1.put(ATTRIBUTE_HEADER_NEWS, top_news.text());
-                    //map1.put(ATTRIBUTE_SUBTITLE_NEWS, subtitle_top_news.text());
-                    map1.put(ATTRIBUTE_HREF_NEWS, href.attr("abs:href"));
-                    map1.put(ATTRIBUTE_URL_IMG_NEWS, res);
-
-                    // adding HashList to ArrayList
-                    arrayListNews.add(map1);
-
                 }
             } catch (IOException e) {
                 //e.printStackTrace();
                 Log.d(LOG_TAG, "Ошибка парсинга TitleBloknotTaganrog", e);
             }
-            //}
             return arrayListNews;
         }
 
@@ -906,51 +777,62 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected String doInBackground(String... params) {
             Document doc = null;
-            String str = "";
+            String content = "";
+
+            String url_news = "";
+            String url_news_tag = "https://donday-taganrog.ru";
+            String url_news_ros = "https://donday.ru";
+            String url_news_sha = "https://donday-shakhty.ru";
+            String url_news_nov = "https://donday-novocherkassk.ru";
+            String url_news_vol = "https://donday-volgodonsk.ru";
+
+            switch (position_cities) {
+                case 0:
+                    url_news = url_news_tag;
+                    break;
+                case 1:
+                    url_news = url_news_ros;
+                    break;
+                case 2:
+                    url_news = url_news_sha;
+                    break;
+                case 3:
+                    url_news = url_news_nov;
+                    break;
+                case 4:
+                    url_news = url_news_vol;
+                    break;
+            }
+
             try {
                 doc = Jsoup
                         .connect(params[0])
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
                         .sslSocketFactory(socketFactory())
+                        .referrer("https://www.google.com/")
                         .timeout(5000)
                         .get();
 
-                Element date_time1 = doc.select(".news-date-time").get(0);
-                Element date_time2 = doc.select(".news-date-time").get(1);
+                // дата
+                Element date_time = doc.select(".argbox").first();
+                content_time_news = date_time.text();
 
-                Element img = doc.select(".news-picture").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").get(0); //21.08.16
-                //System.out.println(img.attr("src"));
-                content_url_img_news = "https:" + img.attr("src");
-                //System.out.println(content_url_img_news);
+                // фото
+                Element img = doc.select("picture").select("source[srcset~=(?i)\\.(png|gif|jpe?g|webp)]").first();
+                content_url_img_news = url_news + img.attr("srcset");
 
-                //текст статьи
-                Element content = doc.select(".news-text").first();
+                // текст
+                Element text = doc.select(".maincont").first();
+                text.select(".yandex-favorit").remove();
+                text.select(".rate").remove();
+                text.select(".basetags").remove();
 
-                //картинки из статьи
-                Elements content_imgs = content.select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]");
-                for (Element content_img : content_imgs) {
-                    //System.out.println("https:" + content_img.attr("src"));
-                }
-
-                /*if (autor != null) {
-                    str = date.text() + ". " + content.text() + " " + autor.text();
-                } else {
-                    str = date.text() + ". " + content.text();
-                }*/
-
-                //с заглавной буквы
-                String date_time_first = date_time1.text().substring(0, 1).toUpperCase();
-                String date_time_all = date_time1.text().substring(1);
-                String date_time_up = date_time_first + date_time_all;
-
-                content_time_news = date_time_up + ", " + date_time2.text();
-
-                str = content.text() + ". Ссылка: " + params[0];
+                content = text.text() + "\n" + "Ссылка: " + params[0];
 
             } catch (IOException e) {
                 Log.d(LOG_TAG, "Ошибка парсинга ContentBloknotTaganrog", e);
             }
-            return str;
+            return content;
         }
 
         @Override
@@ -1395,7 +1277,7 @@ public class MainActivity extends AppCompatActivity
                 doll_yesterday = rate_content.select(".td-w-4").get(2).text();
                 doll_today = rate_content.select(".td-w-4").get(3).text();
                 euro_symbol = "€";
-                euro_yesterday =  rate_content.select(".td-w-4").get(4).text();
+                euro_yesterday = rate_content.select(".td-w-4").get(4).text();
                 euro_today = rate_content.select(".td-w-4").get(5).text();
 
                 // драг.металы
@@ -2086,7 +1968,7 @@ public class MainActivity extends AppCompatActivity
                                     MainActivity.this,
                                     arrayList_news,
                                     R.layout.list_news2,
-                                    new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_HEADER_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
+                                    new String[]{ATTRIBUTE_TIME_NEWS, ATTRIBUTE_TITLE_NEWS, ATTRIBUTE_SUBTITLE_NEWS},
                                     new int[]{R.id.time_news, R.id.header_news, R.id.subtitle_news});
                     // определяем список и присваиваем ему адаптер
                     listView_news = findViewById(R.id.listView_news);
