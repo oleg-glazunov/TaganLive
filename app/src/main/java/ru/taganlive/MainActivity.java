@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity
     private String content_url_img_teatr;
     // имена атрибутов для Map (Чеховский)
     final String ATTRIBUTE_TIME_TEATR = "time_teatr";
-    final String ATTRIBUTE_HEADER_TEATR = "header_teatr";
+    final String ATTRIBUTE_TITLE_TEATR = "header_teatr";
     final String ATTRIBUTE_URL_IMG_TEATR = "url_img_teatr";
     final String ATTRIBUTE_HREF_TEATR = "href_teatr";
 
@@ -776,6 +776,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected String doInBackground(String... params) {
+
             Document doc = null;
             String content = "";
 
@@ -888,14 +889,14 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected ArrayList<HashMap<String, String>> doInBackground(String... strings) {
-            ArrayList<HashMap<String, String>> arrayListKino = new ArrayList<>();
 
+            ArrayList<HashMap<String, String>> arrayListKino = new ArrayList<>();
             Document doc = null;
 
             try {
                 doc = Jsoup
                         .connect("https://kinoneo.ru/schedule")
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
                         .ignoreContentType(true)
                         .timeout(5000)
                         .get();
@@ -988,12 +989,14 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected String doInBackground(String... params) {
+
             Document doc = null;
             String content_description_kino = "";
+
             try {
                 doc = Jsoup
                         .connect(params[0])
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
                         .timeout(5000)
                         .get();
 
@@ -1095,68 +1098,45 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected ArrayList<HashMap<String, String>> doInBackground(String... strings) {
-            ArrayList<HashMap<String, String>> arrayListTeatr = new ArrayList<>();
 
+            ArrayList<HashMap<String, String>> arrayListTeatr = new ArrayList<>();
             Document doc = null;
             Element href = null;
 
             try {
                 doc = Jsoup
                         .connect("http://chehovsky.ru/afisha/afisha")
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
                         .ignoreContentType(true)
                         .timeout(5000)
                         .get();
 
-                Elements elements = doc.getElementsByTag("td");
+                Elements elements = doc.select(".calendar_month .item");
+
                 for (Element element : elements) {
-                    if (element.text().length() > 12 && element.text().length() < 500) {
 
-                        // дата спектакля
-                        Element date = element.select("span[class=day_title]").first();
+                    // ссылка
+                    href = element.select("a[href]").first();
 
-                        // название спектакля
-                        Elements performances = element.select(".performance");
-                        for (Element performance : performances) {
-                            // ссылка на описаниие
-                            href = performance.select("a[href]").first();
-                        }
+                    // название
+                    Element title = element.select(".desc").first();
 
-                        HashMap<String, String> map = new HashMap<>();
+                    // фото
+                    Element img = element.select(".image").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").first();
 
-                        // фото спектакля
-//                        Element img = element.select(".performance").select("img[src~=(?i)\\.(png|gif|jpe?g)]").first();
-//                        if (img != null) {
-//                            map.put(ATTRIBUTE_URL_IMG_TEATR, "http://chehovsky.ru" + img.attr("src"));
-//                            //System.out.println("http://www.chehovsky.ru" + img.attr("src"));
-//                        } else {
-//                            map.put(ATTRIBUTE_URL_IMG_TEATR, null);
-//                        }
-                        Element img = element.select(".performance").select("img[src~=(?i)\\.(png|gif|jpe?g|webp)]").first();
-                        if (img == null) {
-                            map.put(ATTRIBUTE_URL_IMG_TEATR, "android.resource://" + getPackageName() + "/drawable/teatr_noimage");
-                        } else {
-                            map.put(ATTRIBUTE_URL_IMG_TEATR, "http://chehovsky.ru" + img.attr("src"));
-                        }
+                    // дата и время
+                    Element date = element.select(".date").first();
+                    Element weekday = element.select(".left").select("h6").first();
+                    Element time = element.select(".times").first();
 
-                        //текущий год
-                        java.util.Calendar calendar = java.util.Calendar.getInstance(java.util.TimeZone.getDefault(), java.util.Locale.getDefault());
-                        calendar.setTime(new java.util.Date());
-                        int currentYear = calendar.get(java.util.Calendar.YEAR);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(ATTRIBUTE_HREF_TEATR, href.attr("abs:href"));
+                    map.put(ATTRIBUTE_TITLE_TEATR, title.text());
+                    map.put(ATTRIBUTE_URL_IMG_TEATR, "http://chehovsky.ru" + img.attr("src"));
+                    map.put(ATTRIBUTE_TIME_TEATR, date.text() + ", " + weekday.text() + ", начало в " + time.text());
+                    arrayListTeatr.add(map);
 
-                        map.put(ATTRIBUTE_TIME_TEATR, date.text() + " " + currentYear);
-                        map.put(ATTRIBUTE_HEADER_TEATR, performances.text());
-                        map.put(ATTRIBUTE_HREF_TEATR, href.attr("abs:href"));
-
-                        // adding HashList to ArrayList
-                        arrayListTeatr.add(map);
-
-                        //hashMap.put(day.text() + " " + currentYear + ". " + performances.text(), href.attr("abs:href"));
-                        //System.out.println(day.text() + " " + currentYear + ". " + performances.text() + " " + href.attr("abs:href"));
-
-                    }
                 }
-
             } catch (IOException e) {
                 Log.d(LOG_TAG, "Ошибка парсинга TitleTeatr", e);
             }
@@ -1183,34 +1163,45 @@ public class MainActivity extends AppCompatActivity
         protected String doInBackground(String... params) {
 
             Document doc = null;
-            String str = "";
+            String content = "";
             content_url_img_teatr = "";
+            ArrayList<String> artistsList = new ArrayList<String>();
 
             try {
                 doc = Jsoup
                         .connect(params[0])
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
                         .ignoreContentType(true)
                         .timeout(5000)
                         .get();
 
+                // название
                 Element title = doc.select(".title").first();
-                Element author = doc.select(".author").first();
-                Element description = doc.select(".description").first();
-                //Element persons = doc.select(".persons").get(0);
 
-                Element image = doc.select(".lightbox").select("img").first();
+                Element genre = doc.select(".description1-block").select("em").first();
+
+                // фото
+                Element image = doc.select(".images-row").select("img").first();
                 content_url_img_teatr = image.attr("abs:src");
 
-                //System.out.println(title.text() + ". " + author.text() + ". " + description.text() + ". " + persons.text());
-                //System.out.println(url_img_content_teatr);
+                // описание
+                Element desc1 = doc.select(".description1-block").first();
+                desc1.select("em").remove();
+                Element desc2 = doc.select(".description_ul").first();
 
-                str = title.text() + ". " + author.text() + ". " + description.text(); // + ". " + persons.text();
+                // артисты
+                Elements artists = doc.select(".spectacl_artists_block");
+                //for (Element artist : artists) {
+                //    Element art = artist.select(".artist-role-item").first();
+                //    artistsList.add(art);
+                //}
+
+                content = title.text() + "\n" + genre.text() + "\n\n" + desc1.text() + "\n\n" + desc2.text() + "\n\n" + artists.text();
 
             } catch (IOException e) {
                 Log.d(LOG_TAG, "Ошибка парсинга ContentMyTaganrog", e);
             }
-            return str;
+            return content;
         }
 
         @Override
@@ -1265,7 +1256,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 Document doc = Jsoup
                         .connect("https://cbr.ru/key-indicators/")
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
                         .timeout(5000)
                         .get();
 
@@ -2203,7 +2194,7 @@ public class MainActivity extends AppCompatActivity
                                 MainActivity.this,
                                 arrayList_teatr,
                                 R.layout.list_teatr2,
-                                new String[]{ATTRIBUTE_TIME_TEATR, ATTRIBUTE_HEADER_TEATR},
+                                new String[]{ATTRIBUTE_TIME_TEATR, ATTRIBUTE_TITLE_TEATR},
                                 new int[]{R.id.time_teatr, R.id.header_teatr});
 
                 // определяем список и присваиваем ему адаптер
